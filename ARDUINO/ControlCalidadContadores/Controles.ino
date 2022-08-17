@@ -73,22 +73,22 @@ void button_start(){
     lcd.setCursor(10, 3);
     lcd.print("Bloq:");
     lcd.print("    ");
-    delay(10);
-    lcd.setCursor(10, 3);
-    lcd.print("Bloq:0");
+    BloqueosTotales = 0;
   }
 }
 
 void button_ciclos(){
   if(digitalRead(BotonCiclos) == LOW) {
     limiteContador = limiteContador + 1;
-    if(limiteContador > 15){
-      limiteContador = 1;
+    if(limiteContador > 13){
+      limiteContador = 0;
     lcd.setCursor(0, 2);
     lcd.print("Ciclos:");
-    lcd.print("    ");
+    lcd.print("       ");
     lcd.setCursor(0, 2);
     lcd.print("Ciclos:");
+
+    Serial.println(limiteContador);
     lcd.print(Ciclos[limiteContador]*100);
     }
     EEPROM.update(5, limiteContador); 
@@ -96,7 +96,7 @@ void button_ciclos(){
     lcd.setCursor(0, 2);
     lcd.print("Ciclos:");
     lcd.print(Ciclos[limiteContador]*100);
-    delay(200);
+    delay(500);
   }
 }
 
@@ -104,9 +104,9 @@ void button_timedelay(){
   if(digitalRead(BotonVel) == LOW) {
     Serial.println("delay");
     timedelay = EEPROM.read(6);
-    timedelay = timedelay+2;
-    if(timedelay > 11){
-      timedelay = 1;
+    timedelay = timedelay+1;
+    if(timedelay > 2){
+      timedelay = 0;
     lcd.setCursor(0, 3);
     lcd.print("Vel:");
     lcd.print("  ");
@@ -142,7 +142,7 @@ void sensor_bloqueo(){
     BloqueosTotales = accion[1].count/CiclosBloqueo;
     lcd.setCursor(10, 3);
     lcd.print("Bloq:");
-    lcd.print("  ");
+    lcd.print("    ");
     
     lcd.setCursor(10, 3);
     lcd.print("Bloq:");
@@ -153,7 +153,7 @@ void sensor_bloqueo(){
 }
 
 void Conteo_relevadores(){
-  if((digitalRead(entrada_relevador_delantera)==LOW)&& !!EnableSumaRele[0]){
+  if((digitalRead(entrada_relevador_delantera)==LOW)&& !EnableSumaRele[0]){
     Serial.println("entra1");
     releValor[0].count++;
     releValor[0].byte1 = releValor[0].count >> 8;
@@ -170,7 +170,7 @@ void Conteo_relevadores(){
     lcd.print(releValor[0].count);
     delay(500);
   }
-  if((digitalRead(entrada_relevador_trasera)==LOW)&& !!EnableSumaRele[1]){
+  if((digitalRead(entrada_relevador_trasera)==LOW)&& !EnableSumaRele[1]){
     Serial.println("entra2");
     releValor[1].count++;
     releValor[1].byte1 = releValor[1].count >> 8;
@@ -191,6 +191,7 @@ void Conteo_relevadores(){
   if(digitalRead(entrada_relevador_delantera)==HIGH){
     EnableSumaRele[0]= 0;
   }
+  
   if(digitalRead(entrada_relevador_trasera)==HIGH){
     EnableSumaRele[1]= 0;
   }

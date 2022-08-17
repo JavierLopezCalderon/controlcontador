@@ -25,13 +25,15 @@ class accesos {
     byte byte1, byte2;
 };
 
-int pasos = 1200, timedelay = 2;
+int pasos = 1200; 
+int timedelay;
+int velocidad[3] = {500, 700, 1000};
 int limiteContador = 1;
 int fin, dir_estado, estado_reset, cambio_giro, estado_inicio;
 int countinicio;
 int pausecontador;
 int SegundosBloqueado = 20; 
-int BloqueosTotales;
+int BloqueosTotales = 0;
 int CiclosBloqueo = 100; //CADA CUANTOS CICLOS SE BLOQUEARA
 int varauxiliarbloqueo = 0;
 unsigned long previousEnableSumaRele, previousRefrecarLCD;
@@ -78,13 +80,13 @@ void setup() {
   lcd.print("ESPERA UN");
   lcd.setCursor(0,2);
   lcd.print("MOMENTO...");
-  delay(3000);
+  delay(2000);
   lcd.clear();
   lcd.setCursor(0,1);
   lcd.print("INICIANDO SISTEMA...");
   lcd.setCursor(6,2);
   lcd.print(":(");
-  delay(1000);
+  delay(2000);
   lcd.clear();
   
   accion[0].byte1 = EEPROM.read(0);
@@ -145,10 +147,10 @@ void ciclopaso(){
     button_timedelay();
     sensor_bloqueo();
     digitalWrite(stepPin, HIGH);
-    delay(timedelay);
+    delayMicroseconds(velocidad[timedelay]);
     digitalWrite(stepPin, LOW);
     //delay(1);
-    delay(timedelay);
+    delayMicroseconds(velocidad[timedelay]);
    if(digitalRead(fin_carrera1)==LOW && estado_reset == 0 && dir_estado == 1){
      Serial.println(digitalRead(fin_carrera1));
       if(countinicio == 1){
